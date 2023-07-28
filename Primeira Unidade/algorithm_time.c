@@ -24,6 +24,6 @@ int main() {
     for (i = 0; i < tamanho; i++) {
         printf("%d ", vetor[i]);
     }
-    printf("\nTempo de execução bubble sort: %li", (start - end)/(CLOCKS_PER_SEC));
+    printf("\nTempo de execução bubble sort: %li", (end - start)/(CLOCKS_PER_SEC));
     return 0;
 }
