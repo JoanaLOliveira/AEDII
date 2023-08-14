@@ -1,23 +1,32 @@
 #include <stdio.h>
 
-int NaoRecursivo(int num) {
-    int inver = 0;
-
-    while (num > 0) {
-        inver = inver * 10 + num % 10;
-        num = num / 10;
+int inverterNumeroRecursivo(int n, int invertido){
+    if(n == 0){
+        return invertido;
     }
-
-    return inver;
+    
+    int ultimoN = n % 10;
+    invertido = invertido * 10 + ultimoN;
+    return inverterNumeroRecursivo(n / 10, invertido);
 }
 
-int main() {
-    int num;
-    printf("Digite um numero: ");
-    scanf("%d", &num);
+int inverterNumero(int n){
+    int invertido = 0;
+    int ultimoN;
+    while(n > 0){
+        ultimoN = n % 10;
+        invertido = invertido * 10 + ultimoN;
+        n /= 10;
+    }
 
-    int inver = NaoRecursivo(num);
-    printf("Numero invertido: %d\n", inver);
-    
-    return 0;
+    return invertido;
+}
+
+
+int main() {
+   int n = 4321, invertido;
+  invertido =  inverterNumeroRecursivo(n , 0);
+  printf("\nInvertido recursivo: %i", invertido);
+  invertido = inverterNumero(n);
+  printf("\nInvertido iterativo: %i", invertido);
 }
