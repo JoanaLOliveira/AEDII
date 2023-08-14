@@ -1,29 +1,31 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-typedef struct data{
-    int dia, mes, ano;
-}Dia;
+int diasDeAulas(int dia, int mes, int ano){
+    int ultDia = 29, ultMes = 10, ultAno = 2023;
+    ano  *= 365;
+    mes *= 30;
+    dia += mes+ano;
+    ultAno  *= 365;
+    ultMes *= 30;
+    ultDia += ultMes+ultAno;
+    
+    int semanas = (ultDia - dia)/7;
+    int qntdAulas = semanas*2;
+    
+    return qntdAulas;
 
-int Total_Aulas(Dia dia_hoje, Dia dia_ultimo){
-    int DiasdeAula=0, diahoje;
-    int meshoje, mesultimo = dia_ultimo.mes;
-    int anohoje, anoultimo = dia_ultimo.ano;
-    for(anohoje = dia_hoje.ano; anohoje <= anoultimo; anohoje++){
-        for(meshoje = dia_hoje.mes; meshoje <= mesultimo; meshoje++){
-            for(diahoje = dia_hoje.dia; diahoje <= 30; diahoje++){
-                if(diahoje % 7 == 2){
-                    DiasdeAula++;
-                }
-            }
-        }
-    }
-    return (DiasdeAula);
 }
 
 int main(){
-    Dia dia_hoje = {7, 8, 2023};
-    Dia dia_ultimo = {20, 11, 2023};
-    int total = Total_Aulas(dia_hoje, dia_ultimo);
-    printf("\nTivemos %d aulas", total);
-    return(0);
+    int dia, mes, ano;
+    
+    printf("\nInsira o dia: ");
+    scanf("%i", &dia);
+    printf("\nInsira o mes: ");
+    scanf("%i", &mes);
+    printf("\nInsira o ano: ");
+    scanf("%i", &ano);
+    int R = diasDeAulas(dia, mes, ano);
+    printf("\nQuantidade de aulas entre a data atual e fim do periodo: %i", R);
 }
