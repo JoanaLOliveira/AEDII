@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 
 #define lista 32
 
@@ -10,7 +9,7 @@ typedef struct contatos{
     int telefone;
 }Contatos;
 
-struct Hash {
+struct hash {
     int chave;
     char livre;
     Contatos *contatos;
@@ -30,8 +29,8 @@ int funcao_hashing(int key) {
 }
 
 
-void mostrar_hash(struct Hash tabela[]) {
-    FILE*arq=fopen("Contatos.txt","r");
+void mostrar_hash(struct hash *tabela) {
+    FILE*arq=fopen("Contatos.txt","w");
     fprintf(arq,"LISTA DE CONTATOS:\n");
     if(arq==NULL){
         printf("ERRO AO ABRIR O ARQUIVO\n");
@@ -48,25 +47,17 @@ void mostrar_hash(struct Hash tabela[]) {
 }
 
 
-void inserir(struct Hash tabela[], Contatos *contat) {
-    
+void inserir(struct hash *tabela, Contatos *contat) {
     int index = funcao_hashing(contat->telefone);
-    int key = index;
-    while (key <= lista && tabela[index].livre != 'L' && tabela[index].livre != 'R') {
-        index = (index + key) % lista;
-        key = key + 1;
+    while(tabela[index].livre != 'L' && tabela[index].livre !='R'){
+        index = (index+1)%lista;
     }
-    if (key <= lista) {
-        tabela[index].contatos = contat;
-        tabela[index].chave = funcao_hashing(contat->telefone);
-        tabela[index].livre = 'O';
-    }
-    else {
-        printf("Tabela cheia ou em loop\n");
-    }
+    tabela[index].contatos = contat;
+    tabela[index].livre = 'O';
+    printf("Elemento adicionado na tabela Hash!\n");
 }
 
-int buscar_Contato(struct Hash tabela[], int num) {
+int buscar_Contato(struct hash *tabela, int num) {
     int index = funcao_hashing(num);
     int key = 1;
     while (key <= lista && tabela[index].livre != 'L' && tabela[index].chave != num) {
@@ -81,7 +72,7 @@ int buscar_Contato(struct Hash tabela[], int num) {
     }
 }
 
-void remover(struct Hash *tabela, int num) {
+void remover(struct hash *tabela, int num) {
     int posicao = buscar_Contato(tabela, num);
     if (posicao < lista) {
         tabela[posicao].livre = 'R';
@@ -89,21 +80,6 @@ void remover(struct Hash *tabela, int num) {
     else {
         printf("Elemento não está presente\n");
     }
-}
-
-int buscar(struct Hash *tabela, int num){
-    int i = 1;
-    int key = funcao_hashing(num);
-    while(i <= lista && tabela[key].livre != "L" && tabela[key].chave != num){
-        if(tabela[key].contatos->telefone == num){
-            key = (key + i) % lista;
-            i = i + 1;
-        }
-        else if(tabela[key].chave == num && tabela[key].livre != "R"){
-            return key;
-        }
-    }
-
 }
 
 Contatos *add_contato(){
@@ -118,10 +94,12 @@ Contatos *add_contato(){
     scanf("%s",novo_contato->email);
     printf("Digite o telefone: ");
     scanf("%d",&novo_contato->telefone);
+    
+    printf("Contato adicionado com sucesso!\n");
     return(novo_contato);
 }
 
-void listarContatos(struct Hash *tabela){
+void listarContatos(struct hash *tabela){
     printf("\nLista de Contatos:\n\n");
     for (int i = 0; i < 32; i++){
         if (tabela[i].contatos->telefone != 0){
@@ -133,7 +111,7 @@ void listarContatos(struct Hash *tabela){
 }
 
 int main() {
-    struct Hash tabela[lista];
+    struct hash tabela[lista];
     Contatos* contat;
     unsigned int saida =0;
     int num, i, op;
@@ -155,44 +133,44 @@ int main() {
         }
         else {
             switch (op) {
-            case 1:
-                printf("\n ADICIONAR CONTATO\n");
-                contat = add_contato();
-
-                inserir(tabela, contat);
-                break;
-            case 2: 
-                printf("\n EXCLUIR CONTATO \n");
-                printf("Digite o Contato a ser excluido: %d",&num);
-                remover(tabela, num);
-                break;
-            case 3:
-                printf("\n LISTAR CONTATOS");
-                listarContatos(tabela);
-                break;
-            case 4:
-                printf("\n BUSCAR CONTATO");
-                printf("Digite o contato que deseja encontrar: ");
-                scanf("%d", &num);
-                int pos = buscar(tabela, num);
-                printf("Nome: %s\nEmail: %s\nTelefone: %d", tabela[pos].contatos->nome, tabela[pos].contatos->email, tabela->contatos->telefone);
-                break;
-            case 5:
-                printf("\nEXPORTAR CONTATOS\n");
-                mostrar_hash(tabela);
-                break;
-            case 6:
-                printf("\n=================================\n");
-                printf("              SAIR               \n");
-                printf("=================================\n");
-                saida = 1;
-                printf("\n");
-                break;
-            default:
-                break;
+                case 1:
+                    printf("\n ADICIONAR CONTATO\n");
+                    contat = add_contato();
+                    inserir(tabela, contat);
+                    break;
+                case 2: 
+                    printf("\n EXCLUIR CONTATO \n");
+                    printf("Digite o Contato a ser excluido: ");
+                    scanf("%d", &num);
+                    remover(tabela, num);
+                    break;
+                case 3:
+                    printf("\n LISTAR CONTATOS");
+                    listarContatos(tabela);
+                    break;
+                case 4:
+                    printf("\n BUSCAR CONTATO");
+                    printf("Digite o contato que deseja encontrar: ");
+                    scanf("%d", &num);
+                    int pos = buscar_Contato(tabela, num);
+                    printf("Nome: %s\nEmail: %s\nTelefone: %d", tabela[pos].contatos->nome, tabela[pos].contatos->email, tabela[pos].contatos->telefone);
+                    break;
+                case 5:
+                    printf("\nEXPORTAR CONTATOS\n");
+                    mostrar_hash(tabela);
+                    break;
+                case 6:
+                    printf("\n=================================\n");
+                    printf("              SAIR               \n");
+                    printf("=================================\n");
+                    saida = 1;
+                    printf("\n");
+                    break;
+                default:
+                    break;
             }
         }
         getch();
-    } while (op != saida);
+    } while (op != 0);
     return 0;
 }
