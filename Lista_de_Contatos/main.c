@@ -17,7 +17,7 @@ struct Hash {
 };
 
 int funcaoHash2(int key){
-    return key % 32;
+    return key % lista;
 }
 
 int funcao_hashing(int key) {
@@ -48,15 +48,17 @@ void mostrar_hash(struct Hash tabela[]) {
 }
 
 
-void inserir(struct Hash tabela[], int num) {
-    int index = funcao_hashing(num);
+void inserir(struct Hash tabela[], Contatos *contat) {
+    
+    int index = funcao_hashing(contat->telefone);
     int key = index;
     while (key <= lista && tabela[index].livre != 'L' && tabela[index].livre != 'R') {
         index = (index + key) % lista;
         key = key + 1;
     }
     if (key <= lista) {
-        tabela[index].chave = num;
+        tabela[index].contatos = contat;
+        tabela[index].chave = funcao_hashing(contat->telefone);
         tabela[index].livre = 'O';
     }
     else {
@@ -79,8 +81,8 @@ int buscar_Contato(struct Hash tabela[], int num) {
     }
 }
 
-void remover(struct Hash tabela[], int num) {
-    int posicao = buscar(tabela, num);
+void remover(struct Hash *tabela, int num) {
+    int posicao = buscar_Contato(tabela, num);
     if (posicao < lista) {
         tabela[posicao].livre = 'R';
     }
@@ -89,26 +91,16 @@ void remover(struct Hash tabela[], int num) {
     }
 }
 
-void buscar(struct Hash tabela[], int num){
-    int c;
-    printf("Digite o numero que deseja buscar");
-    scanf("%d", &c);
-    size_t key = funcao_hashing(c);
-    struct Hash *novo;
-    int key_inicio = key;
-    while(1){
-        if(tabela[key].contatos->telefone == c){
-        novo = tabela[key];
-        return novo;
+int buscar(struct Hash *tabela, int num){
+    int i = 1;
+    int key = funcao_hashing(num);
+    while(i <= lista && tabela[key].livre != "L" && tabela[key].chave != num){
+        if(tabela[key].contatos->telefone == num){
+            key = (key + i) % lista;
+            i = i + 1;
         }
-        key++;
-        if(key_inicio == key){
-            break;
-        }
-
-        if(key > lista){
-            key = key%lista;
-            key_inicio = key;
+        else if(tabela[key].chave == num && tabela[key].livre != "R"){
+            return key;
         }
     }
 
@@ -129,13 +121,13 @@ Contatos *add_contato(){
     return(novo_contato);
 }
 
-void listarContatos(Contatos **tabela){
+void listarContatos(struct Hash *tabela){
     printf("\nLista de Contatos:\n\n");
-    for (int i = 0; i < 32; i++) {
-        if (tabela[i]->telefone != 0){
-            printf("\nNome: %s\n", tabela[i]->nome);
-            printf("Email: %s\n", tabela[i]->email);
-            printf("Telefone: %d\n", tabela[i]->telefone);
+    for (int i = 0; i < 32; i++){
+        if (tabela[i].contatos->telefone != 0){
+            printf("\nNome: %s\n", tabela[i].contatos->nome);
+            printf("Email: %s\n", tabela[i].contatos->email);
+            printf("Telefone: %d\n", tabela[i].contatos->telefone);
         }
     }
 }
@@ -165,8 +157,9 @@ int main() {
             switch (op) {
             case 1:
                 printf("\n ADICIONAR CONTATO\n");
-                num=add_contato(tabela);
-                inserir(tabela, num);
+                contat = add_contato();
+
+                inserir(tabela, contat);
                 break;
             case 2: 
                 printf("\n EXCLUIR CONTATO \n");
@@ -179,8 +172,10 @@ int main() {
                 break;
             case 4:
                 printf("\n BUSCAR CONTATO");
-                printf("Digite o contato que deseja encontrar: %d", &num);
-                buscar(tabela,num);
+                printf("Digite o contato que deseja encontrar: ");
+                scanf("%d", &num);
+                int pos = buscar(tabela, num);
+                printf("Nome: %s\nEmail: %s\nTelefone: %d", tabela[pos].contatos->nome, tabela[pos].contatos->email, tabela->contatos->telefone);
                 break;
             case 5:
                 printf("\nEXPORTAR CONTATOS\n");
@@ -198,6 +193,6 @@ int main() {
             }
         }
         getch();
-    } while (op != 6);
+    } while (op != saida);
     return 0;
 }
