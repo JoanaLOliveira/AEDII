@@ -15,8 +15,12 @@ struct hash {
     Contatos *contatos;
 };
 
-int funcaoHash2(int key){
-    return key % lista;
+int funcaoHash2(int key) {
+    float A = 0.6180339887; 
+    float valorHash = key * A;
+    valorHash = valorHash - (int)valorHash;
+    unsigned int indice = (unsigned int)(lista * valorHash);
+    return indice;
 }
 
 int funcao_hashing(int key) {
@@ -25,7 +29,8 @@ int funcao_hashing(int key) {
         sum += key % 10;
         key /= 10;
     }
-    return funcaoHash2(sum);
+    int index = funcaoHash2(sum%lista);
+    return index;
 }
 
 
@@ -37,13 +42,20 @@ void mostrar_hash(struct hash *tabela) {
         exit (1);
     }
     for (int i = 0; i < lista; i++) {
-        if (tabela[i].contatos != NULL && tabela[i].contatos->telefone != 0) {
+        if (tabela[i].contatos != NULL && tabela->livre != 'R'){
             fprintf(arq, "\nNome: %s\n", tabela[i].contatos->nome);
             fprintf(arq, "Email: %s\n", tabela[i].contatos->email);
             fprintf(arq, "Telefone: %d\n", tabela[i].contatos->telefone);
         }
     }
     fclose(arq);
+}
+
+void limpaTabela(struct hash *tabela){
+    int i;
+    for(i=0; i < lista; i++){
+        tabela[i].contatos = NULL;
+    }
 }
 
 
@@ -54,13 +66,14 @@ void inserir(struct hash *tabela, Contatos *contat) {
     }
     tabela[index].contatos = contat;
     tabela[index].livre = 'O';
+    tabela[index].chave = contat->telefone;
     printf("Elemento adicionado na tabela Hash!\n");
 }
 
 int buscar_Contato(struct hash *tabela, int num) {
     int index = funcao_hashing(num);
     int key = 1;
-    while (key <= lista && tabela[index].livre != 'L' && tabela[index].chave != num) {
+    while (key <= lista && tabela[index].livre != 'O' && tabela[index].chave != num) {
         index = (index + key) % lista;
         key = key + 1;
     }
@@ -102,7 +115,7 @@ Contatos *add_contato(){
 void listarContatos(struct hash *tabela){
     printf("\nLista de Contatos:\n\n");
     for (int i = 0; i < 32; i++){
-        if (tabela[i].contatos->telefone != 0){
+        if (tabela[i].contatos != NULL && tabela->livre != 'R'){
             printf("\nNome: %s\n", tabela[i].contatos->nome);
             printf("Email: %s\n", tabela[i].contatos->email);
             printf("Telefone: %d\n", tabela[i].contatos->telefone);
@@ -113,12 +126,11 @@ void listarContatos(struct hash *tabela){
 int main() {
     struct hash tabela[lista];
     Contatos* contat;
-    unsigned int saida =0;
     int num, i, op;
     for (i = 0; i < lista; i++) {
         tabela[i].livre = 'L';
     }
-    do {
+    while(1){
         printf("\nMENU DE OPÇÕES\n");
         printf("\n1-Adicionar contato\n");
         printf("\n2-Excluir elemento\n");
@@ -135,6 +147,7 @@ int main() {
             switch (op) {
                 case 1:
                     printf("\n ADICIONAR CONTATO\n");
+                    limpaTabela(tabela);
                     contat = add_contato();
                     inserir(tabela, contat);
                     break;
@@ -163,14 +176,14 @@ int main() {
                     printf("\n=================================\n");
                     printf("              SAIR               \n");
                     printf("=================================\n");
-                    saida = 1;
+                    exit(0);
                     printf("\n");
                     break;
                 default:
+                    printf("Opção invalida!\n");
                     break;
             }
         }
-        getch();
-    } while (op != 0);
+    }
     return 0;
 }
