@@ -127,6 +127,7 @@ int main() {
     struct hash tabela[lista];
     Contatos* contat;
     int num, i, op;
+    limpaTabela(tabela);
     for (i = 0; i < lista; i++) {
         tabela[i].livre = 'L';
     }
@@ -147,7 +148,6 @@ int main() {
             switch (op) {
                 case 1:
                     printf("\n ADICIONAR CONTATO\n");
-                    limpaTabela(tabela);
                     contat = add_contato();
                     inserir(tabela, contat);
                     break;
@@ -158,11 +158,11 @@ int main() {
                     remover(tabela, num);
                     break;
                 case 3:
-                    printf("\n LISTAR CONTATOS");
+                    printf("\n LISTAR CONTATOS\n");
                     listarContatos(tabela);
                     break;
                 case 4:
-                    printf("\n BUSCAR CONTATO");
+                    printf("\n BUSCAR CONTATO\n");
                     printf("Digite o contato que deseja encontrar: ");
                     scanf("%d", &num);
                     int pos = buscar_Contato(tabela, num);
