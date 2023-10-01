@@ -67,7 +67,7 @@ void inserir(struct hash *tabela, Contatos *contat) {
     tabela[index].contatos = contat;
     tabela[index].livre = 'O';
     tabela[index].chave = contat->telefone;
-    printf("Elemento adicionado na tabela Hash!\n");
+    printf("Contato adicionado na tabela Hash!\n");
 }
 
 int buscar_Contato(struct hash *tabela, int num) {
@@ -91,7 +91,7 @@ void remover(struct hash *tabela, int num) {
         tabela[posicao].livre = 'R';
     }
     else {
-        printf("Elemento não está presente\n");
+        printf("Contato não está presente\n");
     }
 }
 
@@ -133,11 +133,11 @@ int main() {
     }
     while(1){
         printf("\nMENU DE OPÇÕES\n");
-        printf("\n1-Adicionar contato\n");
-        printf("\n2-Excluir elemento\n");
+        printf("\n1-Adicionar Contato\n");
+        printf("\n2-Excluir Contato\n");
         printf("\n3-Listar Contatos\n");
-        printf("\n4-Buscar contato\n");
-        printf("\n5-Exportar contato\n");
+        printf("\n4-Buscar Contato\n");
+        printf("\n5-Exportar Contato\n");
         printf("\n6-Sair\n");
         printf("\nDigite sua opção: ");
         scanf("%d", &op);
@@ -147,35 +147,45 @@ int main() {
         else {
             switch (op) {
                 case 1:
-                    printf("\n ADICIONAR CONTATO\n");
+                    printf("\n====================\n");
+                    printf("\n  ADICIONAR CONTATO\n");
+                    printf("\n====================\n");
                     contat = add_contato();
                     inserir(tabela, contat);
                     break;
                 case 2: 
-                    printf("\n EXCLUIR CONTATO \n");
+                    printf("\n====================\n");
+                    printf("\n  EXCLUIR CONTATO \n");
+                    printf("\n====================\n");
                     printf("Digite o Contato a ser excluido: ");
                     scanf("%d", &num);
                     remover(tabela, num);
                     break;
                 case 3:
-                    printf("\n LISTAR CONTATOS\n");
+                    printf("\n====================\n");
+                    printf("\n  LISTAR CONTATOS\n");
+                    printf("\n====================\n");
                     listarContatos(tabela);
                     break;
                 case 4:
-                    printf("\n BUSCAR CONTATO\n");
+                    printf("\n====================\n");
+                    printf("\n  BUSCAR CONTATO\n");
+                    printf("\n====================\n");
                     printf("Digite o contato que deseja encontrar: ");
                     scanf("%d", &num);
                     int pos = buscar_Contato(tabela, num);
                     printf("Nome: %s\nEmail: %s\nTelefone: %d", tabela[pos].contatos->nome, tabela[pos].contatos->email, tabela[pos].contatos->telefone);
                     break;
                 case 5:
-                    printf("\nEXPORTAR CONTATOS\n");
+                    printf("\n====================\n");
+                    printf("\n  EXPORTAR CONTATOS  \n");
+                    printf("\n====================\n");
                     mostrar_hash(tabela);
                     break;
                 case 6:
-                    printf("\n=================================\n");
-                    printf("              SAIR               \n");
-                    printf("=================================\n");
+                    printf("\n====================\n");
+                    printf("          SAIR \n");
+                    printf("\n====================\n");
                     exit(0);
                     printf("\n");
                     break;
