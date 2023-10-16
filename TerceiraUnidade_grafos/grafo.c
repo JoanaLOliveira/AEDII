@@ -25,17 +25,6 @@ typedef struct grafo {
     int numArestas;
 } Grafo;
 
-Adjacencia* cria_fila() {
-    Adjacencia* adjacencia = (Adjacencia*)malloc(sizeof(Adjacencia));
-    if (adjacencia == NULL) {
-        printf("\nErro na alocação da fila");
-        return NULL;
-    }
-    adjacencia->vertice = NULL;
-    adjacencia->proximo = NULL;
-    return adjacencia;
-}
-
 Adjacencia* cria_adjacencia() {
     Adjacencia* newAdjacencia = (Adjacencia*)malloc(sizeof(Adjacencia));
     if (newAdjacencia == NULL) {
